@@ -1,9 +1,9 @@
 // Service Worker
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js').catch(err => console.error('SW Error:', err));
+    navigator.serviceWorker.register('/sw.js').catch(err => console.error('SW:', err));
 }
 
-// Playlists avanzate
+// Playlists
 const playlists = [
     {
         name: 'Relax Profondo',
@@ -41,8 +41,10 @@ let currentTrack = 0;
 let isPlaying = false;
 let isShuffle = false;
 let isRepeat = false;
+let audioContext = null;
+let analyser = null;
 
-// DOM Elements
+// DOM
 const audioPlayer = document.getElementById('audioPlayer');
 const playPauseBtn = document.getElementById('playPause');
 const playIcon = document.getElementById('playIcon');
@@ -53,8 +55,8 @@ const volumeFill = document.getElementById('volumeFill');
 const volumeText = document.getElementById('volumeText');
 const seekBar = document.getElementById('seekBar');
 const progressFill = document.getElementById('progressFill');
-const currentTime = document.getElementById('currentTime');
-const duration = document.getElementById('duration');
+const currentTimeEl = document.getElementById('currentTime');
+const durationEl = document.getElementById('duration');
 const trackName = document.getElementById('trackName');
 const trackArtist = document.getElementById('trackArtist');
 const vinyl = document.querySelector('.vinyl');
@@ -94,29 +96,24 @@ function loadTrack() {
         navigator.mediaSession.metadata = new MediaMetadata({
             title: track.title,
             artist: track.artist,
-            album: playlists[currentPlaylist].name,
-            artwork: [{ src: 'icon-512.png', sizes: '512x512', type: 'image/png' }]
+            album: playlists[currentPlaylist].name
         });
-        
-        navigator.mediaSession.setActionHandler('play', () => playPause());
-        navigator.mediaSession.setActionHandler('pause', () => playPause());
-        navigator.mediaSession.setActionHandler('previoustrack', () => prevTrack());
-        navigator.mediaSession.setActionHandler('nexttrack', () => nextTrack());
     }
 }
 
 function playPause() {
     if (isPlaying) {
         audioPlayer.pause();
-        playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+        playIcon.textContent = '▶️';
         vinyl.classList.remove('playing');
         isPlaying = false;
     } else {
-        audioPlayer.play();
-        playIcon.innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
-        vinyl.classList.add('playing');
-        isPlaying = true;
-        setupVisualizer();
+        audioPlayer.play().then(() => {
+            playIcon.textContent = '⏸️';
+            vinyl.classList.add('playing');
+            isPlaying = true;
+            if (!audioContext) setupVisualizer();
+        }).catch(err => console.log('Playback error:', err));
     }
 }
 
@@ -138,12 +135,12 @@ function nextTrack() {
     if (isPlaying) audioPlayer.play();
 }
 
-playPauseBtn.addEventListener('click', playPause);
-prevBtn.addEventListener('click', prevTrack);
-nextBtn.addEventListener('click', nextTrack);
+playPauseBtn?.addEventListener('click', playPause);
+prevBtn?.addEventListener('click', prevTrack);
+nextBtn?.addEventListener('click', nextTrack);
 
 // Volume
-volume.addEventListener('input', (e) => {
+volume?.addEventListener('input', (e) => {
     const val = e.target.value;
     audioPlayer.volume = val / 100;
     volumeFill.style.width = `${val}%`;
@@ -156,12 +153,12 @@ audioPlayer.addEventListener('timeupdate', () => {
         const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
         progressFill.style.width = `${percent}%`;
         seekBar.value = percent;
-        currentTime.textContent = formatTime(audioPlayer.currentTime);
-        duration.textContent = formatTime(audioPlayer.duration);
+        currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+        durationEl.textContent = formatTime(audioPlayer.duration);
     }
 });
 
-seekBar.addEventListener('input', (e) => {
+seekBar?.addEventListener('input', (e) => {
     const time = (e.target.value / 100) * audioPlayer.duration;
     audioPlayer.currentTime = time;
 });
@@ -176,18 +173,19 @@ audioPlayer.addEventListener('ended', () => {
 });
 
 function formatTime(seconds) {
+    if (!seconds || isNaN(seconds)) return '0:00';
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs.toString().padStart(2, '0')}`;
 }
 
 // Shuffle & Repeat
-shuffleBtn.addEventListener('click', () => {
+shuffleBtn?.addEventListener('click', () => {
     isShuffle = !isShuffle;
     shuffleBtn.style.opacity = isShuffle ? '1' : '0.5';
 });
 
-repeatBtn.addEventListener('click', () => {
+repeatBtn?.addEventListener('click', () => {
     isRepeat = !isRepeat;
     repeatBtn.style.opacity = isRepeat ? '1' : '0.5';
 });
@@ -206,70 +204,67 @@ document.querySelectorAll('.playlist-card').forEach((card, index) => {
 
 // Visualizer
 function setupVisualizer() {
-    const canvas = document.getElementById('visualizer');
-    const ctx = canvas.getContext('2d');
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const analyser = audioContext.createAnalyser();
-    const source = audioContext.createMediaElementSource(audioPlayer);
-    
-    source.connect(analyser);
-    analyser.connect(audioContext.destination);
-    analyser.fftSize = 256;
-    
-    const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
-    
-    function draw() {
-        requestAnimationFrame(draw);
-        analyser.getByteFrequencyData(dataArray);
+    try {
+        const canvas = document.getElementById('visualizer');
+        if (!canvas) return;
         
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        const ctx = canvas.getContext('2d');
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioContext.createAnalyser();
+        const source = audioContext.createMediaElementSource(audioPlayer);
         
-        const barWidth = (canvas.width / bufferLength) * 2.5;
-        let x = 0;
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+        analyser.fftSize = 128;
         
-        for (let i = 0; i < bufferLength; i++) {
-            const barHeight = (dataArray[i] / 255) * canvas.height * 0.8;
-            const gradient = ctx.createLinearGradient(0, canvas.height - barHeight, 0, canvas.height);
-            gradient.addColorStop(0, '#ff6b9d');
-            gradient.addColorStop(1, '#ffa06b');
-            ctx.fillStyle = gradient;
-            ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-            x += barWidth + 1;
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+        
+        function draw() {
+            if (!isPlaying) return;
+            requestAnimationFrame(draw);
+            analyser.getByteFrequencyData(dataArray);
+            
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            const barWidth = (canvas.width / bufferLength) * 2.5;
+            let x = 0;
+            
+            for (let i = 0; i < bufferLength; i++) {
+                const barHeight = (dataArray[i] / 255) * canvas.height * 0.7;
+                const gradient = ctx.createLinearGradient(0, canvas.height - barHeight, 0, canvas.height);
+                gradient.addColorStop(0, '#ff6b9d');
+                gradient.addColorStop(1, '#ffa06b');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+                x += barWidth + 1;
+            }
         }
+        
+        draw();
+    } catch (err) {
+        console.log('Visualizer error:', err);
     }
-    
-    draw();
 }
 
 // Camera
 const cameraFeed = document.getElementById('cameraFeed');
 const activateCamera = document.getElementById('activateCamera');
+const cameraPlaceholder = document.querySelector('.camera-placeholder');
 let cameraStream = null;
 
-activateCamera.addEventListener('click', async () => {
+activateCamera?.addEventListener('click', async () => {
     if (!cameraStream) {
         try {
-            // Per telecamera IP, usa: cameraFeed.src = 'http://your-camera-ip/stream'
-            // Per HLS: usa hls.js come mostrato sotto
-            
-            // Esempio con getUserMedia (webcam locale)
             const stream = await navigator.mediaDevices.getUserMedia({ 
-                video: { width: 1920, height: 1080 } 
+                video: { width: 1280, height: 720 } 
             });
             cameraFeed.srcObject = stream;
+            cameraFeed.classList.add('active');
+            if (cameraPlaceholder) cameraPlaceholder.style.display = 'none';
             cameraStream = stream;
             activateCamera.textContent = 'Disattiva Telecamera';
-            
-            // Esempio con HLS.js per stream RTSP convertito
-            /*
-            if (Hls.isSupported()) {
-                const hls = new Hls();
-                hls.loadSource('http://your-server/stream.m3u8');
-                hls.attachMedia(cameraFeed);
-            }
-            */
         } catch (err) {
             alert('Errore telecamera: ' + err.message);
         }
@@ -277,22 +272,27 @@ activateCamera.addEventListener('click', async () => {
         cameraStream.getTracks().forEach(track => track.stop());
         cameraStream = null;
         cameraFeed.srcObject = null;
+        cameraFeed.classList.remove('active');
+        if (cameraPlaceholder) cameraPlaceholder.style.display = 'flex';
         activateCamera.textContent = 'Attiva Telecamera';
     }
 });
 
-// Ambiente Controls
+// Ambiente
 let temperature = 22;
+const tempDisplay = document.getElementById('tempDisplay');
+const tempSensor = document.getElementById('temperature');
+
 document.getElementById('tempUp')?.addEventListener('click', () => {
     temperature++;
-    document.querySelector('.temp-value').textContent = `${temperature}°`;
-    document.getElementById('temperature').textContent = `${temperature}°C`;
+    if (tempDisplay) tempDisplay.textContent = `${temperature}°`;
+    if (tempSensor) tempSensor.textContent = `${temperature}°C`;
 });
 
 document.getElementById('tempDown')?.addEventListener('click', () => {
     temperature--;
-    document.querySelector('.temp-value').textContent = `${temperature}°`;
-    document.getElementById('temperature').textContent = `${temperature}°C`;
+    if (tempDisplay) tempDisplay.textContent = `${temperature}°`;
+    if (tempSensor) tempSensor.textContent = `${temperature}°C`;
 });
 
 // Climate modes
@@ -312,11 +312,19 @@ document.querySelectorAll('.scene-btn').forEach(btn => {
 });
 
 // Brightness
-document.getElementById('brightness')?.addEventListener('input', (e) => {
-    document.getElementById('brightnessValue').textContent = `${e.target.value}%`;
+const brightnessSlider = document.getElementById('brightness');
+const brightnessValue = document.getElementById('brightnessValue');
+brightnessSlider?.addEventListener('input', (e) => {
+    if (brightnessValue) brightnessValue.textContent = `${e.target.value}%`;
 });
 
 // Aroma
+const aromaSlider = document.getElementById('aromaIntensity');
+const aromaValue = document.getElementById('aromaValue');
+aromaSlider?.addEventListener('input', (e) => {
+    if (aromaValue) aromaValue.textContent = `${e.target.value}%`;
+});
+
 document.querySelectorAll('.aroma-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         btn.classList.toggle('active');
@@ -327,9 +335,11 @@ document.querySelectorAll('.aroma-btn').forEach(btn => {
 document.querySelectorAll('.service-card').forEach(card => {
     card.addEventListener('click', () => {
         const service = card.querySelector('h3').textContent;
-        alert(`Servizio "${service}" richiesto. Un operatore ti assisterà a breve.`);
+        alert(`✅ Servizio "${service}" richiesto!\nUn operatore ti assisterà a breve.`);
     });
 });
 
 // Load first track
 loadTrack();
+
+console.log('App caricata correttamente');
