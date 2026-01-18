@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#e8d5c4">
+    <title>Cabina Centro Estetico</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+    <link rel="apple-touch-icon" href="icon-192.png">
+</head>
+<body>
+    <div class="container">
+        <!-- Header con nome cabina -->
+        <header class="header">
+            <h1>🌸 Cabina Trattamenti</h1>
+            <div class="clock" id="clock"></div>
+        </header>
+
+        <!-- Sezione Telecamera -->
+        <section class="camera-section">
+            <h2>📹 Ingresso</h2>
+            <div class="camera-container">
+                <video id="cameraStream" autoplay playsinline muted></video>
+                <button class="btn-camera" id="toggleCamera">Attiva Telecamera</button>
+            </div>
+        </section>
+
+        <!-- Sezione Controllo Musica -->
+        <section class="music-section">
+            <h2>🎵 Musica Ambientale</h2>
+            
+            <div class="playlist">
+                <button class="playlist-btn active" data-playlist="rilassante">Rilassante</button>
+                <button class="playlist-btn" data-playlist="energizzante">Energizzante</button>
+                <button class="playlist-btn" data-playlist="natura">Natura</button>
+            </div>
+
+            <div class="player">
+                <audio id="audioPlayer"></audio>
+                <div class="track-info">
+                    <div class="track-title" id="trackTitle">Seleziona una playlist</div>
+                </div>
+                
+                <div class="controls">
+                    <button class="control-btn" id="prevBtn">⏮️</button>
+                    <button class="control-btn large" id="playBtn">▶️</button>
+                    <button class="control-btn" id="nextBtn">⏭️</button>
+                </div>
+
+                <div class="volume-control">
+                    <span>🔊</span>
+                    <input type="range" id="volumeSlider" min="0" max="100" value="50">
+                    <span id="volumeValue">50%</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pulsanti Utilità -->
+        <section class="utilities">
+            <button class="utility-btn" id="lightsBtn">💡 Luci</button>
+            <button class="utility-btn" id="helpBtn">🔔 Chiama Assistenza</button>
+            <button class="utility-btn" id="fullscreenBtn">⛶ Schermo Intero</button>
+        </section>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
