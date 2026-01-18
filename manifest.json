@@ -1,12 +1,12 @@
 {
-  "name": "Centro Estetico - Controllo Cabina",
-  "short_name": "Cabina Control",
-  "description": "App per gestione musica, telecamera e controlli nelle cabine",
+  "name": "Suite Premium - Centro Estetico",
+  "short_name": "Suite Control",
+  "description": "Sistema avanzato di controllo per suite premium",
   "start_url": "/",
   "display": "fullscreen",
   "orientation": "landscape",
-  "background_color": "#f5e6d3",
-  "theme_color": "#e8d5c4",
+  "background_color": "#0f0f1e",
+  "theme_color": "#1a1a2e",
   "icons": [
     {
       "src": "icon-192.png",
