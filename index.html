@@ -19,7 +19,8 @@
     <aside class="sidebar">
       <div class="brand">
         <div class="brandMark">
-          <svg class="i i-22"><use href="#i-spark"></use></svg>
+          <!-- SLOT ICON (brand) -->
+          <svg class="i i-22"><use href="#i-slot-brand"></use></svg>
         </div>
         <div class="brandText">
           <div class="brandTitle">Suite Controllo</div>
@@ -28,29 +29,39 @@
       </div>
 
       <nav class="nav">
-        <button class="navItem isActive" data-panel="music" type="button">
-          <svg class="i"><use href="#i-music"></use></svg>
+        <button class="navItem isActive" data-panel="dashboard" type="button">
+          <!-- SLOT ICON -->
+          <svg class="i"><use href="#i-slot-dashboard"></use></svg>
+          <span>Dashboard</span>
+        </button>
+
+        <button class="navItem" data-panel="music" type="button">
+          <svg class="i"><use href="#i-slot-music"></use></svg>
           <span>Musica</span>
         </button>
 
         <button class="navItem" data-panel="camera" type="button">
-          <svg class="i"><use href="#i-camera"></use></svg>
+          <svg class="i"><use href="#i-slot-camera"></use></svg>
           <span>Telecamera</span>
         </button>
 
         <button class="navItem" data-panel="ambience" type="button">
-          <svg class="i"><use href="#i-sliders"></use></svg>
+          <svg class="i"><use href="#i-slot-ambience"></use></svg>
           <span>Ambiente</span>
         </button>
 
         <button class="navItem" data-panel="services" type="button">
-          <svg class="i"><use href="#i-grid"></use></svg>
+          <svg class="i"><use href="#i-slot-services"></use></svg>
           <span>Servizi</span>
         </button>
       </nav>
 
       <div class="sideFooter">
         <div class="sideStat">
+          <div class="sideStatRow">
+            <span class="muted">Rete</span>
+            <span class="strong" id="sideNet">Online</span>
+          </div>
           <div class="sideStatRow">
             <span class="muted">Temperatura</span>
             <span class="strong" id="sideTemp">22°C</span>
@@ -87,6 +98,11 @@
             <svg class="i i-18"><use href="#i-timer"></use></svg>
             <span id="timerLabel">Timer: --:--</span>
           </div>
+
+          <div class="pill" title="Stato musica">
+            <svg class="i i-18"><use href="#i-music"></use></svg>
+            <span id="musicLabel">Musica: Stop</span>
+          </div>
         </div>
 
         <div class="topRight">
@@ -105,12 +121,177 @@
         </div>
       </header>
 
-      <!-- PANELS -->
-      <section class="panel isActive" id="panel-music">
+      <!-- DASHBOARD (NUOVA) -->
+      <section class="panel isActive" id="panel-dashboard">
+        <div class="panelHeader">
+          <div>
+            <h1>Dashboard</h1>
+            <p class="sub">Comandi rapidi + status cabina. Spazi pronti per le tue icone.</p>
+          </div>
+          <div class="panelActions">
+            <button class="ghostBtn" id="dashEditShortcuts" type="button">Gestisci scorciatoie</button>
+          </div>
+        </div>
+
+        <div class="dashGrid">
+          <!-- Status cards -->
+          <div class="card dashStatus">
+            <div class="dashStatusRow">
+              <div class="statusItem">
+                <div class="statusLabel muted">Musica</div>
+                <div class="statusValue" id="dashNowTrack">Nessun brano</div>
+              </div>
+              <div class="statusItem">
+                <div class="statusLabel muted">Volume</div>
+                <div class="statusValue mono" id="dashVol">60%</div>
+              </div>
+            </div>
+            <div class="dashStatusRow">
+              <div class="statusItem">
+                <div class="statusLabel muted">Timer</div>
+                <div class="statusValue mono" id="dashTimer">--:--</div>
+              </div>
+              <div class="statusItem">
+                <div class="statusLabel muted">Temperatura</div>
+                <div class="statusValue mono" id="dashTemp">22°C</div>
+              </div>
+            </div>
+
+            <div class="dashQuickRow">
+              <button class="dashMini" id="dashMusicToggle" type="button" title="Play/Pausa musica">
+                <svg class="i i-18" id="dashMusicIcon"><use href="#i-play"></use></svg>
+                <span>Play/Pausa</span>
+              </button>
+              <button class="dashMini" id="dashMute" type="button" title="Mute">
+                <svg class="i i-18"><use href="#i-volume"></use></svg>
+                <span>Mute</span>
+              </button>
+              <button class="dashMini" id="dashCam" type="button" title="Vai alla telecamera">
+                <svg class="i i-18"><use href="#i-slot-camera"></use></svg>
+                <span>Ingresso</span>
+              </button>
+              <button class="dashMini" id="dashAssist" type="button" title="Assistenza">
+                <svg class="i i-18"><use href="#i-bell"></use></svg>
+                <span>Assistenza</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Shortcut grid (spazio icone) -->
+          <div class="card dashShortcuts">
+            <div class="cardTop">
+              <div class="cardTitle">
+                <svg class="i"><use href="#i-grid"></use></svg>
+                <span>Scorciatoie</span>
+              </div>
+              <div class="muted small">Tocca per eseguire. Le icone qui le mettiamo dopo.</div>
+            </div>
+
+            <div class="shortcutGrid" id="shortcutGrid">
+              <!-- Ogni tile ha un'icona SLOT, sostituibile con la tua -->
+              <button class="tile" data-action="go:music" type="button">
+                <div class="tileIcon">
+                  <svg class="i i-22"><use href="#i-slot-tile-1"></use></svg>
+                </div>
+                <div class="tileText">
+                  <div class="tileTitle">Musica</div>
+                  <div class="tileSub">Playlist & volume</div>
+                </div>
+              </button>
+
+              <button class="tile" data-action="go:camera" type="button">
+                <div class="tileIcon">
+                  <svg class="i i-22"><use href="#i-slot-tile-2"></use></svg>
+                </div>
+                <div class="tileText">
+                  <div class="tileTitle">Telecamera</div>
+                  <div class="tileSub">Ingresso</div>
+                </div>
+              </button>
+
+              <button class="tile" data-action="go:ambience" type="button">
+                <div class="tileIcon">
+                  <svg class="i i-22"><use href="#i-slot-tile-3"></use></svg>
+                </div>
+                <div class="tileText">
+                  <div class="tileTitle">Ambiente</div>
+                  <div class="tileSub">Luci, clima, aromi</div>
+                </div>
+              </button>
+
+              <button class="tile" data-action="timer:45" type="button">
+                <div class="tileIcon">
+                  <svg class="i i-22"><use href="#i-slot-tile-4"></use></svg>
+                </div>
+                <div class="tileText">
+                  <div class="tileTitle">Timer 45</div>
+                  <div class="tileSub">Avvio rapido</div>
+                </div>
+              </button>
+
+              <button class="tile" data-action="preset:relax" type="button">
+                <div class="tileIcon">
+                  <svg class="i i-22"><use href="#i-slot-tile-5"></use></svg>
+                </div>
+                <div class="tileText">
+                  <div class="tileTitle">Preset Relax</div>
+                  <div class="tileSub">Luci + volume</div>
+                </div>
+              </button>
+
+              <button class="tile" data-action="service:water" type="button">
+                <div class="tileIcon">
+                  <svg class="i i-22"><use href="#i-slot-tile-6"></use></svg>
+                </div>
+                <div class="tileText">
+                  <div class="tileTitle">Bevande</div>
+                  <div class="tileSub">Richiesta</div>
+                </div>
+              </button>
+
+              <button class="tile" data-action="service:clean" type="button">
+                <div class="tileIcon">
+                  <svg class="i i-22"><use href="#i-slot-tile-7"></use></svg>
+                </div>
+                <div class="tileText">
+                  <div class="tileTitle">Pulizia</div>
+                  <div class="tileSub">Fine trattamento</div>
+                </div>
+              </button>
+
+              <button class="tile" data-action="go:services" type="button">
+                <div class="tileIcon">
+                  <svg class="i i-22"><use href="#i-slot-tile-8"></use></svg>
+                </div>
+                <div class="tileText">
+                  <div class="tileTitle">Servizi</div>
+                  <div class="tileSub">Tutte le azioni</div>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Activity / log -->
+          <div class="card dashLog">
+            <div class="cardTop">
+              <div class="cardTitle">
+                <svg class="i"><use href="#i-info"></use></svg>
+                <span>Attività</span>
+              </div>
+              <button class="ghostBtn" id="clearLog" type="button">Svuota</button>
+            </div>
+
+            <div class="logList" id="logList"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MUSIC -->
+      <section class="panel" id="panel-music">
         <div class="panelHeader">
           <div>
             <h1>Musica</h1>
-            <p class="sub">Playlist, volume, preferiti e controllo rapido.</p>
+            <p class="sub">Player completo: playlist, preferiti, ricerca.</p>
           </div>
 
           <div class="panelActions">
@@ -124,12 +305,11 @@
         </div>
 
         <div class="gridMusic">
-          <!-- NOW PLAYING -->
           <div class="card cardNow">
             <div class="nowTop">
               <div class="nowMeta">
                 <div class="nowTitle" id="nowTitle">Nessun brano</div>
-                <div class="nowArtist" id="nowArtist">Seleziona un brano dalla lista</div>
+                <div class="nowArtist" id="nowArtist">Seleziona un brano</div>
               </div>
 
               <button class="iconBtn" id="favNow" type="button" title="Preferito">
@@ -140,7 +320,7 @@
             <div class="vizWrap">
               <canvas id="viz" width="620" height="120"></canvas>
               <div class="vizFallback" id="vizFallback">
-                <div class="muted">Visualizzazione audio non disponibile su questo dispositivo.</div>
+                <div class="muted">Visualizzazione audio non disponibile.</div>
               </div>
             </div>
 
@@ -154,17 +334,9 @@
             </div>
 
             <div class="controlsRow">
-              <button class="ctrlBtn" id="prev" type="button" title="Precedente">
-                <svg class="i i-20"><use href="#i-prev"></use></svg>
-              </button>
-
-              <button class="ctrlBtn isMain" id="playPause" type="button" title="Play / Pausa">
-                <svg class="i i-22" id="playPauseIcon"><use href="#i-play"></use></svg>
-              </button>
-
-              <button class="ctrlBtn" id="next" type="button" title="Successivo">
-                <svg class="i i-20"><use href="#i-next"></use></svg>
-              </button>
+              <button class="ctrlBtn" id="prev" type="button"><svg class="i i-20"><use href="#i-prev"></use></svg></button>
+              <button class="ctrlBtn isMain" id="playPause" type="button"><svg class="i i-22" id="playPauseIcon"><use href="#i-play"></use></svg></button>
+              <button class="ctrlBtn" id="next" type="button"><svg class="i i-20"><use href="#i-next"></use></svg></button>
             </div>
 
             <div class="volRow">
@@ -175,20 +347,19 @@
               </div>
               <span class="mono" id="volText">60%</span>
 
-              <button class="ghostBtn" id="mute" type="button" title="Muto">
+              <button class="ghostBtn" id="mute" type="button">
                 <svg class="i i-18" id="muteIcon"><use href="#i-volume"></use></svg>
               </button>
             </div>
           </div>
 
-          <!-- LIST / PLAYLIST -->
           <div class="card cardList">
             <div class="listTop">
               <div class="tabs" role="tablist">
                 <button class="tab isActive" data-tab="tracks" type="button">Brani</button>
                 <button class="tab" data-tab="favorites" type="button">Preferiti</button>
-                <button class="tab" data-tab="timer" type="button">Timer</button>
               </div>
+
               <div class="search">
                 <svg class="i i-18"><use href="#i-search"></use></svg>
                 <input id="search" type="text" placeholder="Cerca brano..." autocomplete="off" />
@@ -205,7 +376,6 @@
                   <option value="3">Lounge</option>
                 </select>
               </div>
-
               <div class="trackList" id="trackList"></div>
             </div>
 
@@ -216,49 +386,24 @@
               </div>
               <div class="trackList" id="favList"></div>
             </div>
-
-            <div class="tabBody" id="tab-timer">
-              <div class="timerBox">
-                <div class="timerBig mono" id="timerBig">00:00</div>
-
-                <div class="timerPresets">
-                  <button class="pillBtn" data-min="30" type="button">30 min</button>
-                  <button class="pillBtn" data-min="45" type="button">45 min</button>
-                  <button class="pillBtn" data-min="60" type="button">60 min</button>
-                  <button class="pillBtn" data-min="90" type="button">90 min</button>
-                </div>
-
-                <div class="timerCustom">
-                  <input id="timerCustomMin" type="number" min="1" max="240" value="45" />
-                  <span class="muted">min</span>
-
-                  <button class="primaryBtn" id="timerStart" type="button">Avvia</button>
-                  <button class="ghostBtn" id="timerStop" type="button">Stop</button>
-                  <button class="ghostBtn" id="timerReset" type="button">Reset</button>
-                </div>
-
-                <div class="muted small">
-                  Il timer resta anche se cambi sezione (salvato in locale).
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
+      <!-- CAMERA -->
       <section class="panel" id="panel-camera">
         <div class="panelHeader">
           <div>
             <h1>Telecamera</h1>
-            <p class="sub">Sorgente configurabile (HLS .m3u8 o webcam locale).</p>
+            <p class="sub">HLS (m3u8) o webcam locale.</p>
           </div>
 
           <div class="panelActions">
             <button class="iconBtn" id="camSnapshot" type="button" title="Snapshot">
               <svg class="i i-18"><use href="#i-cameraShot"></use></svg>
             </button>
-            <button class="iconBtn" id="camFit" type="button" title="Adatta">
-              <svg class="i i-18"><use href="#i-frame"></use></svg>
+            <button class="iconBtn" id="camFullscreen" type="button" title="Schermo intero">
+              <svg class="i i-18"><use href="#i-maximize"></use></svg>
             </button>
           </div>
         </div>
@@ -275,18 +420,15 @@
 
             <div class="camEmpty" id="camEmpty">
               <div class="camEmptyIcon">
-                <svg class="i i-32"><use href="#i-camera"></use></svg>
+                <svg class="i i-32"><use href="#i-slot-camera"></use></svg>
               </div>
               <div class="muted">Telecamera non attiva</div>
-              <div class="small muted">Apri Impostazioni per inserire URL HLS oppure usa webcam locale.</div>
+              <div class="small muted">Impostazioni → URL HLS oppure webcam locale.</div>
             </div>
 
             <div class="camTools">
-              <button class="iconBtn" id="camStartStop" type="button" title="Avvia / Ferma">
+              <button class="iconBtn" id="camStartStop" type="button" title="Avvia/Ferma">
                 <svg class="i i-18" id="camStartStopIcon"><use href="#i-power"></use></svg>
-              </button>
-              <button class="iconBtn" id="camFullscreen" type="button" title="Schermo intero">
-                <svg class="i i-18"><use href="#i-maximize"></use></svg>
               </button>
             </div>
           </div>
@@ -303,11 +445,11 @@
             <div class="formRow">
               <label class="muted">URL HLS</label>
               <input id="camHlsUrl" class="input" type="text" placeholder="https://.../stream.m3u8" />
-              <div class="hint muted">Per RTSP: serve conversione RTSP→HLS lato server.</div>
+              <div class="hint muted">Per RTSP serve conversione lato server.</div>
             </div>
 
             <div class="formRow">
-              <label class="muted">Zoom (solo visuale)</label>
+              <label class="muted">Zoom (visuale)</label>
               <input id="camZoom" type="range" min="100" max="180" value="100" />
             </div>
 
@@ -319,11 +461,12 @@
         </div>
       </section>
 
+      <!-- AMBIENCE -->
       <section class="panel" id="panel-ambience">
         <div class="panelHeader">
           <div>
             <h1>Ambiente</h1>
-            <p class="sub">Preset rapidi e controllo locale (placeholder per integrazione domotica).</p>
+            <p class="sub">Preset e controlli (pronti per integrazione API).</p>
           </div>
         </div>
 
@@ -344,7 +487,7 @@
               <button class="primaryBtn" id="tempApply" type="button">Applica</button>
             </div>
 
-            <div class="muted small">Collega qui la tua API (MQTT/HTTP) quando pronta.</div>
+            <div class="muted small">Collegamento API da aggiungere.</div>
           </div>
 
           <div class="card">
@@ -410,16 +553,17 @@
               <button class="presetBtn" id="presetSave" type="button">Salva attuale</button>
             </div>
 
-            <div class="muted small">Salva/richiama preset in locale per cabina.</div>
+            <div class="muted small">Preset salvati sul tablet.</div>
           </div>
         </div>
       </section>
 
+      <!-- SERVICES -->
       <section class="panel" id="panel-services">
         <div class="panelHeader">
           <div>
             <h1>Servizi</h1>
-            <p class="sub">Azioni rapide (integrabili con un backend).</p>
+            <p class="sub">Azioni rapide integrabili con backend.</p>
           </div>
         </div>
 
@@ -463,15 +607,7 @@
       </section>
     </main>
 
-    <!-- SCREENSAVER -->
-    <div class="screensaver" id="screensaver">
-      <div class="ssBox">
-        <div class="ssTitle">Schermo in pausa</div>
-        <div class="ssSub">Tocca per riprendere</div>
-      </div>
-    </div>
-
-    <!-- MODAL: SETTINGS -->
+    <!-- MODAL SETTINGS -->
     <div class="modal" id="settingsModal" aria-hidden="true">
       <div class="modalCard" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
         <div class="modalTop">
@@ -493,19 +629,13 @@
           <div class="formRow">
             <label class="muted">Webhook assistenza (facoltativo)</label>
             <input id="cfgWebhook" class="input" type="text" placeholder="https://.../webhook" />
-            <div class="hint muted">Se vuoto, mostra solo conferma locale.</div>
+            <div class="hint muted">Se vuoto, conferma locale.</div>
           </div>
 
           <div class="formRow">
             <label class="muted">Volume massimo</label>
             <input id="cfgMaxVolume" type="range" min="10" max="100" value="80" />
             <div class="mono" id="cfgMaxVolumeTxt">80%</div>
-          </div>
-
-          <div class="formRow">
-            <label class="muted">Screensaver (min)</label>
-            <input id="cfgIdleMin" type="number" min="1" max="120" value="5" />
-            <div class="hint muted">Dopo inattività, schermata nera fino al tocco.</div>
           </div>
 
           <div class="formRow">
@@ -516,8 +646,8 @@
           <div class="formRow">
             <label class="muted">Sorgente camera</label>
             <select id="cfgCamSource" class="select">
-              <option value="hls">HLS (m3u8)</option>
-              <option value="local">Webcam (tablet)</option>
+              <option value="hls">HLS</option>
+              <option value="local">Webcam</option>
             </select>
           </div>
         </div>
@@ -535,54 +665,86 @@
 
   <script src="./app.js"></script>
 
-  <!-- SVG SPRITE (icone "da sito", niente emoji) -->
+  <!-- SVG SPRITE -->
   <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden">
-    <!-- base -->
+    <!-- ===== SLOTS (QUI POI CI METTI LE TUE ICONE) ===== -->
+    <!-- Puoi sostituire SOLO il contenuto del symbol, lasciando l'id uguale -->
+    <symbol id="i-slot-brand" viewBox="0 0 24 24">
+      <path d="M12 2l2.2 6.5L21 9l-5 4 1.5 7L12 17l-5.5 3 1.5-7-5-4 6.8-.5L12 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    </symbol>
+
+    <symbol id="i-slot-dashboard" viewBox="0 0 24 24">
+      <path d="M4 13h7v7H4v-7zm9-9h7v7h-7V4zM4 4h7v7H4V4zm9 9h7v7h-7v-7z" fill="none" stroke="currentColor" stroke-width="2"/>
+    </symbol>
+
+    <symbol id="i-slot-music" viewBox="0 0 24 24">
+      <path d="M9 18V6l12-2v12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="7" cy="18" r="3" fill="none" stroke="currentColor" stroke-width="2"/>
+      <circle cx="19" cy="16" r="3" fill="none" stroke="currentColor" stroke-width="2"/>
+    </symbol>
+
+    <symbol id="i-slot-camera" viewBox="0 0 24 24">
+      <path d="M4 7h4l2-2h4l2 2h4v12H4V7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+      <circle cx="12" cy="13" r="3" fill="none" stroke="currentColor" stroke-width="2"/>
+    </symbol>
+
+    <symbol id="i-slot-ambience" viewBox="0 0 24 24">
+      <path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M2 14h4M10 12h4M18 16h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+
+    <symbol id="i-slot-services" viewBox="0 0 24 24">
+      <path d="M4 4h7v7H4V4zm9 0h7v7h-7V4zM4 13h7v7H4v-7zm9 0h7v7h-7v-7z" fill="none" stroke="currentColor" stroke-width="2"/>
+    </symbol>
+
+    <!-- tile slots -->
+    <symbol id="i-slot-tile-1" viewBox="0 0 24 24"><path d="M12 6v12M6 12h12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-slot-tile-2" viewBox="0 0 24 24"><path d="M4 7h16v12H4V7z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 7l2-2h4l2 2" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="i-slot-tile-3" viewBox="0 0 24 24"><path d="M12 2v20" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 8h16M4 16h16" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="i-slot-tile-4" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v6l3 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-slot-tile-5" viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.4 4.6 1.7 7L12 18l-6.3 3.2 1.7-7L2 9.6 9 9l3-7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-slot-tile-6" viewBox="0 0 24 24"><path d="M5 8h12v8a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V8z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M17 9h2a2 2 0 0 1 0 4h-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-slot-tile-7" viewBox="0 0 24 24"><path d="M3 21l4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 17l4 4h6l4-4-8-8-6 6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-slot-tile-8" viewBox="0 0 24 24"><path d="M4 4h7v7H4V4zm9 0h7v7h-7V4zM4 13h7v7H4v-7zm9 0h7v7h-7v-7z" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+
+    <!-- ===== BASE ICONS (stabili) ===== -->
     <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
-    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2l1.2 4.2L17 7.4l-3.8 1.2L12 13l-1.2-4.4L7 7.4l3.8-1.2L12 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
 
-    <!-- nav -->
+    <symbol id="i-settings" viewBox="0 0 24 24">
+      <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="M19.4 15a7.8 7.8 0 0 0 .1-2l2-1.2-2-3.4-2.3.7a7.7 7.7 0 0 0-1.7-1l-.3-2.4h-4l-.3 2.4a7.7 7.7 0 0 0-1.7 1l-2.3-.7-2 3.4 2 1.2a7.8 7.8 0 0 0 .1 2l-2 1.2 2 3.4 2.3-.7a7.7 7.7 0 0 0 1.7 1l.3 2.4h4l.3-2.4a7.7 7.7 0 0 0 1.7-1l2.3.7 2-3.4-2-1.2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    </symbol>
+
+    <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M5 9a11 11 0 0 1 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8.5 12.5a6 6 0 0 1 7 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 16h0" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></symbol>
+    <symbol id="i-timer" viewBox="0 0 24 24"><path d="M10 2h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 14l3-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="14" r="8" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="i-maximize" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M16 21h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 14.5A8.5 8.5 0 0 1 10 3.2 7.5 7.5 0 1 0 21 14.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 7h18s-3 0-3-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M13.7 21a2 2 0 0 1-3.4 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+
     <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V6l12-2v12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="7" cy="18" r="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="19" cy="16" r="3" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
-    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 7h4l2-2h4l2 2h4v12H4V7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="13" r="3" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
-    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M2 14h4M10 12h4M18 16h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
-    <symbol id="i-grid" viewBox="0 0 24 24"><path d="M4 4h7v7H4V4zm9 0h7v7h-7V4zM4 13h7v7H4v-7zm9 0h7v7h-7v-7z" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
-
-    <!-- player -->
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M15 9a4 4 0 0 1 0 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
     <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5l12 7-12 7V5z" fill="currentColor"/></symbol>
     <symbol id="i-pause" viewBox="0 0 24 24"><path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor"/></symbol>
     <symbol id="i-prev" viewBox="0 0 24 24"><path d="M6 6v12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M20 6L9 12l11 6V6z" fill="currentColor"/></symbol>
     <symbol id="i-next" viewBox="0 0 24 24"><path d="M18 6v12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M4 6l11 6-11 6V6z" fill="currentColor"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3.5-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
     <symbol id="i-shuffle" viewBox="0 0 24 24"><path d="M16 3h5v5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M4 20l16-16M20 16v5h-5M15 15l5 5M4 4l5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-repeat" viewBox="0 0 24 24"><path d="M17 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M3 11V9a4 4 0 0 1 4-4h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 23l-4-4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M21 13v2a4 4 0 0 1-4 4H3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
-    <symbol id="i-volume" viewBox="0 0 24 24"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M15 9a4 4 0 0 1 0 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
-    <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.4 4.6 1.7 7L12 18l-6.3 3.2 1.7-7L2 9.6 9 9l3-7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
-    <symbol id="i-starFill" viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.4 4.6 1.7 7L12 18l-6.3 3.2 1.7-7L2 9.6 9 9l3-7z" fill="currentColor"/></symbol>
 
-    <!-- system -->
-    <symbol id="i-settings" viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19.4 15a7.8 7.8 0 0 0 .1-2l2-1.2-2-3.4-2.3.7a7.7 7.7 0 0 0-1.7-1l-.3-2.4h-4l-.3 2.4a7.7 7.7 0 0 0-1.7 1l-2.3-.7-2 3.4 2 1.2a7.8 7.8 0 0 0 .1 2l-2 1.2 2 3.4 2.3-.7a7.7 7.7 0 0 0 1.7 1l.3 2.4h4l.3-2.4a7.7 7.7 0 0 0 1.7-1l2.3.7 2-3.4-2-1.2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
-    <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M5 9a11 11 0 0 1 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8.5 12.5a6 6 0 0 1 7 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 16h0" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></symbol>
-    <symbol id="i-wifiOff" viewBox="0 0 24 24"><path d="M2 2l20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M5 9a11 11 0 0 1 9-1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8.5 12.5a6 6 0 0 1 3.5-1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 16h0" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></symbol>
-    <symbol id="i-timer" viewBox="0 0 24 24"><path d="M10 2h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 14l3-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="14" r="8" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
-    <symbol id="i-maximize" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M16 21h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
-    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 14.5A8.5 8.5 0 0 1 10 3.2 7.5 7.5 0 1 0 21 14.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
-    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 7h18s-3 0-3-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M13.7 21a2 2 0 0 1-3.4 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
-    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3.5-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
-
-    <!-- camera -->
-    <symbol id="i-cameraShot" viewBox="0 0 24 24"><path d="M4 7h4l2-2h4l2 2h4v12H4V7z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 13l2 2 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="i-frame" viewBox="0 0 24 24"><path d="M4 7V4h3M20 7V4h-3M4 17v3h3M20 17v3h-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
-    <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 2v10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M6.6 5.6a9 9 0 1 0 10.8 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
-
-    <!-- ambience/services -->
+    <symbol id="i-grid" viewBox="0 0 24 24"><path d="M4 4h7v7H4V4zm9 0h7v7h-7V4zM4 13h7v7H4v-7zm9 0h7v7h-7v-7z" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 10v7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 7h0" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></symbol>
     <symbol id="i-thermo" viewBox="0 0 24 24"><path d="M14 14.8V5a2 2 0 0 0-4 0v9.8a4 4 0 1 0 4 0z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
     <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 22h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 2a7 7 0 0 0-4 12c1 1 1.5 2 1.5 3h5c0-1 .5-2 1.5-3A7 7 0 0 0 12 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
     <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 2s7 8 7 13a7 7 0 0 1-14 0C5 10 12 2 12 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
     <symbol id="i-squares" viewBox="0 0 24 24"><path d="M4 4h7v7H4V4zm9 0h7v7h-7V4zM4 13h7v7H4v-7zm9 0h7v7h-7v-7z" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
     <symbol id="i-cup" viewBox="0 0 24 24"><path d="M5 8h12v8a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V8z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M17 9h2a2 2 0 0 1 0 4h-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
     <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
-    <symbol id="i-broom" viewBox="0 0 24 24"><path d="M3 21l4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 17l4 4h6l4-4-8-8-6 6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M14 10l3-3a2 2 0 0 0 0-3l-1-1a2 2 0 0 0-3 0l-3 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
-    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 10v7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 7h0" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></symbol>
+    <symbol id="i-broom" viewBox="0 0 24 24"><path d="M3 21l4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 17l4 4h6l4-4-8-8-6 6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
     <symbol id="i-lock" viewBox="0 0 24 24"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 11h12v10H6V11z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+
+    <symbol id="i-cameraShot" viewBox="0 0 24 24"><path d="M4 7h4l2-2h4l2 2h4v12H4V7z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 13l2 2 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 2v10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M6.6 5.6a9 9 0 1 0 10.8 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
   </svg>
 </body>
 </html>
