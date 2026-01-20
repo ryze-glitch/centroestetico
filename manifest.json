@@ -1,24 +1,13 @@
 {
-  "name": "Suite Premium - Centro Estetico",
-  "short_name": "Suite Control",
-  "description": "Sistema avanzato di controllo per suite premium",
-  "start_url": "/",
-  "display": "fullscreen",
-  "orientation": "landscape",
-  "background_color": "#0f0f1e",
-  "theme_color": "#1a1a2e",
+  "name": "Suite Controllo",
+  "short_name": "Suite",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#141826",
+  "theme_color": "#141826",
   "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png" }
   ]
 }
