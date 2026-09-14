@@ -1,3 +1,5 @@
+import { SERVICE_CATEGORIES } from "./services-data.js";
+
 // General UI behaviour: nav scroll state, mobile menu, scroll reveal, footer year.
 
 const nav = document.getElementById("siteNav");
@@ -45,9 +47,67 @@ if ("IntersectionObserver" in window) {
 const yearEl = document.getElementById("year");
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-// Set a sensible minimum date on the booking date input (today).
-const bkDate = document.getElementById("bkDate");
-if (bkDate) {
-  const today = new Date().toISOString().slice(0, 10);
-  bkDate.min = today;
+// ------------------------------------------------------------
+// Render the price menu (servizi) from the shared catalog
+// ------------------------------------------------------------
+const menuCategories = document.getElementById("menuCategories");
+if (menuCategories) {
+  SERVICE_CATEGORIES.forEach((cat) => {
+    const wrap = document.createElement("div");
+    wrap.className = "menu-category";
+
+    const title = document.createElement("h3");
+    title.className = "menu-category-title";
+    title.textContent = cat.category;
+    wrap.appendChild(title);
+
+    cat.items.forEach((item) => {
+      const row = document.createElement("div");
+      row.className = "menu-row";
+
+      const name = document.createElement("span");
+      name.className = "menu-row-name";
+      name.textContent = item.name;
+
+      const leader = document.createElement("span");
+      leader.className = "menu-row-leader";
+      leader.setAttribute("aria-hidden", "true");
+
+      const duration = document.createElement("span");
+      duration.className = "menu-row-duration";
+      duration.textContent = `${item.duration} min`;
+
+      const price = document.createElement("span");
+      price.className = "menu-row-price";
+      price.textContent = `€${item.price}`;
+
+      const book = document.createElement("button");
+      book.type = "button";
+      book.className = "menu-row-book";
+      book.dataset.service = item.name;
+      book.textContent = "Prenota";
+
+      row.append(name, leader, duration, price, book);
+      wrap.appendChild(row);
+    });
+
+    menuCategories.appendChild(wrap);
+  });
 }
+
+// ------------------------------------------------------------
+// Render the hero marquee from the catalog's treatment names
+// ------------------------------------------------------------
+function renderMarquee(elId) {
+  const track = document.getElementById(elId);
+  if (!track) return;
+  SERVICE_CATEGORIES.forEach((cat) => {
+    cat.items.forEach((item) => {
+      const li = document.createElement("li");
+      li.textContent = item.name;
+      track.appendChild(li);
+    });
+  });
+}
+renderMarquee("marqueeTrack");
+renderMarquee("marqueeTrackDup");

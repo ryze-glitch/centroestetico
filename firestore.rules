@@ -17,6 +17,8 @@ rules_version = '2';
 // Fields:
 //   - uid: string (required, immutable, must equal request.auth.uid) - owner
 //   - service: string (required, must be one of the allowed services)
+//   - operator: string (optional, max 60 chars, immutable after create) -
+//       free-text staff preference; "" / omitted means no preference
 //   - date: string (required, format YYYY-MM-DD, immutable after create)
 //   - time: string (required, format HH:MM, immutable after create)
 //   - notes: string (optional, max 500 chars, immutable after create)
@@ -89,9 +91,14 @@ service cloud.firestore {
     }
 
     function isValidService(svc) {
+      // Keep in sync with public/js/services-data.js (SERVICE_CATEGORIES).
       let allowed = [
-        'Trattamento Viso', 'Trattamento Corpo', 'Massaggio Relax',
-        'Epilazione', 'Manicure & Pedicure', 'Make-up'
+        'Pulizia del viso profonda', 'Trattamento idratante', 'Trattamento anti-age',
+        'Trattamento drenante', 'Trattamento rimodellante', 'Scrub corpo e nutrimento',
+        'Massaggio rilassante', 'Massaggio decontratturante', 'Massaggio californiano',
+        'Epilazione gambe complete', 'Epilazione inguine', 'Epilazione baffetti',
+        'Manicure', 'Pedicure', 'Semipermanente mani',
+        'Make-up giorno', 'Make-up sera', 'Make-up sposa (con prova)'
       ];
       return svc is string && svc in allowed;
     }
@@ -108,10 +115,11 @@ service cloud.firestore {
 
     function isValidNewBooking() {
       let data = request.resource.data;
-      return hasOnlyAllowedFields(['uid', 'service', 'date', 'time', 'notes', 'status', 'createdAt']) &&
+      return hasOnlyAllowedFields(['uid', 'service', 'operator', 'date', 'time', 'notes', 'status', 'createdAt']) &&
         hasRequiredFields(['uid', 'service', 'date', 'time', 'status', 'createdAt']) &&
         data.uid is string && data.uid == request.auth.uid &&
         isValidService(data['service']) &&
+        isValidOptionalString('operator', 60) &&
         isValidDateString(data.date) &&
         isValidTimeString(data.time) &&
         isValidOptionalString('notes', 500) &&

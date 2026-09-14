@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#7c5a4a" />
+  <meta name="theme-color" content="#211c17" />
   <meta name="description" content="La Crisalide — centro estetico. Trattamenti viso, corpo, massaggi ed epilazione. Prenota online il tuo appuntamento." />
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
@@ -18,7 +18,7 @@
   " />
   <title>La Crisalide · Centro Estetico</title>
 
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ctext y='19' font-size='20'%3E%F0%9F%A6%8B%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ctext y='19' font-size='20'%3E%F0%9F%8C%BF%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -31,7 +31,7 @@
     <div class="nav-inner">
       <a href="#home" class="brand">
         <span class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 48 48" width="30" height="30"><path d="M24 8c0 0-1 6-8 8-6 1.8-10 7-8 13 1.6 5 7 6 10 3 2-2 3-5 3-8v16M24 8c0 0 1 6 8 8 6 1.8 10 7 8 13-1.6 5-7 6-10 3-2-2-3-5-3-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24" cy="9" r="2.4" fill="currentColor"/></svg>
+          <svg viewBox="0 0 32 32" width="26" height="26"><path d="M16 6c0 8-6 9-6 15a6 6 0 0 0 6-6c0 3.3 2.7 6 6 6 0-6-6-7-6-15Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
         </span>
         <span class="brand-text">
           <span class="brand-title">La Crisalide</span>
@@ -40,9 +40,9 @@
       </a>
 
       <nav class="nav-links" id="navLinks">
-        <a href="#home">Home</a>
-        <a href="#chi-siamo">Chi Siamo</a>
+        <a href="#chi-siamo">Chi siamo</a>
         <a href="#servizi">Servizi</a>
+        <a href="#staff">Staff</a>
         <a href="#prenota">Prenota</a>
         <a href="#contatti">Contatti</a>
       </nav>
@@ -58,27 +58,31 @@
 
   <!-- ================= HERO ================= -->
   <section class="hero" id="home">
-    <div class="hero-blobs" aria-hidden="true">
-      <div class="blob blob-1"></div>
-      <div class="blob blob-2"></div>
-      <div class="blob blob-3"></div>
-    </div>
-    <div class="hero-inner reveal">
-      <p class="eyebrow">Rinasci. Trasformati. Risplendi.</p>
-      <h1>La bellezza è una <span class="accent">metamorfosi</span>,<br class="lg-only" /> non un dettaglio.</h1>
-      <p class="hero-lead">
-        Da La Crisalide ogni trattamento è pensato per accompagnarti in un percorso di cura,
-        proprio come un bozzolo che si trasforma in farfalla. Viso, corpo e benessere,
-        con mani esperte e prodotti professionali.
-      </p>
-      <div class="hero-cta">
-        <a href="#prenota" class="btn btn-primary">Prenota il tuo trattamento</a>
-        <a href="#servizi" class="btn btn-outline">Scopri i servizi</a>
+    <div class="section-inner hero-inner">
+      <div class="hero-copy reveal">
+        <p class="kicker">Centro estetico · dal 2013</p>
+        <h1>Cura di te,<br />senza fretta.</h1>
+        <p class="hero-lead">
+          La Crisalide è un centro estetico dove ogni trattamento parte da un ascolto vero:
+          niente protocolli standard, ma percorsi pensati sulla tua pelle e sul tuo tempo.
+        </p>
+        <div class="hero-cta">
+          <a href="#prenota" class="btn btn-primary">Prenota un trattamento</a>
+          <a href="#servizi" class="btn btn-text">Vedi il listino ↓</a>
+        </div>
+        <div class="hero-stats">
+          <div><strong>12</strong><span>anni di attività</span></div>
+          <div><strong>18</strong><span>trattamenti in menu</span></div>
+          <div><strong>6</strong><span>giorni su 7 aperti</span></div>
+        </div>
       </div>
-      <div class="hero-stats">
-        <div><strong>12+</strong><span>anni di esperienza</span></div>
-        <div><strong>3.000+</strong><span>trattamenti l'anno</span></div>
-        <div><strong>4.9/5</strong><span>soddisfazione clienti</span></div>
+
+      <div class="hero-marquee-box reveal" aria-hidden="true">
+        <div class="hero-marquee-label">In menu oggi</div>
+        <div class="marquee">
+          <ul class="marquee-track" id="marqueeTrack"></ul>
+          <ul class="marquee-track" aria-hidden="true" id="marqueeTrackDup"></ul>
+        </div>
       </div>
     </div>
   </section>
@@ -86,219 +90,175 @@
   <!-- ================= CHI SIAMO ================= -->
   <section class="section" id="chi-siamo">
     <div class="section-inner grid-2 reveal">
-      <div class="chi-siamo-art" aria-hidden="true">
-        <svg viewBox="0 0 200 200" width="100%" height="100%">
-          <defs>
-            <linearGradient id="wingGrad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="var(--rose)"/>
-              <stop offset="1" stop-color="var(--gold)"/>
-            </linearGradient>
-          </defs>
-          <path d="M100 100C100 100 70 30 35 45C0 60 20 120 60 120C90 120 100 100 100 100Z" fill="url(#wingGrad)" opacity="0.85"/>
-          <path d="M100 100C100 100 130 30 165 45C200 60 180 120 140 120C110 120 100 100 100 100Z" fill="url(#wingGrad)" opacity="0.6"/>
-          <path d="M100 100C100 100 78 150 55 155C32 160 35 190 65 185C88 181 100 130 100 100Z" fill="url(#wingGrad)" opacity="0.55"/>
-          <path d="M100 100C100 100 122 150 145 155C168 160 165 190 135 185C112 181 100 130 100 100Z" fill="url(#wingGrad)" opacity="0.4"/>
-          <line x1="100" y1="60" x2="100" y2="160" stroke="var(--ink)" stroke-width="2" opacity="0.5"/>
-        </svg>
-      </div>
-      <div class="chi-siamo-text">
-        <p class="eyebrow">Chi siamo</p>
-        <h2>Un bozzolo di cura, nel cuore della tua routine di bellezza</h2>
-        <p>
-          La Crisalide nasce dal desiderio di offrire molto più di un semplice trattamento estetico:
-          un momento tutto per te, in un ambiente curato, con protocolli professionali e
-          un'attenzione autentica alle tue esigenze. Ogni percorso è costruito su misura,
-          perché ogni trasformazione è unica.
+      <div>
+        <p class="section-index">01 — Chi siamo</p>
+        <h2>Un centro piccolo,<br />fatto di attenzione.</h2>
+        <p class="section-lead">
+          La Crisalide nasce dall'idea che la bellezza sia soprattutto cura: ambiente riservato,
+          prodotti professionali e un'estetista che ti conosce, appuntamento dopo appuntamento.
+          Niente di standardizzato — ogni percorso si costruisce insieme a te.
         </p>
         <ul class="check-list">
-          <li>Consulenza personalizzata prima di ogni trattamento</li>
-          <li>Prodotti professionali e protocolli certificati</li>
-          <li>Staff qualificato e in costante aggiornamento</li>
-          <li>Ambiente riservato, pulito e rilassante</li>
+          <li>Consulenza prima di ogni nuovo trattamento</li>
+          <li>Prodotti professionali certificati</li>
+          <li>Ambiente riservato, un cliente alla volta</li>
+          <li>Staff in aggiornamento costante sulle tecniche</li>
         </ul>
       </div>
+      <div class="chi-siamo-numeral" aria-hidden="true">01</div>
     </div>
   </section>
 
-  <!-- ================= SERVIZI ================= -->
+  <!-- ================= SERVIZI (MENU) ================= -->
   <section class="section section-alt" id="servizi">
     <div class="section-inner reveal">
-      <p class="eyebrow center">Servizi</p>
-      <h2 class="center">Trattamenti pensati per te</h2>
-      <p class="section-lead center">
-        Dal viso al corpo, dal relax alla cura del dettaglio: scegli il percorso più adatto
-        e prenota online in pochi secondi.
+      <p class="section-index">02 — Servizi</p>
+      <h2>Il listino</h2>
+      <p class="section-lead">
+        Prezzi e durate indicativi: la stima esatta viene sempre confermata durante la
+        consulenza, in base alle tue esigenze.
       </p>
 
-      <div class="services-grid">
-        <article class="service-card" data-service="Trattamento Viso">
-          <div class="service-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M12 21c4.5-2 7-6 7-10a7 7 0 0 0-14 0c0 4 2.5 8 7 10Z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M9 11c.5 1 1.6 1.6 3 1.6s2.5-.6 3-1.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.3" cy="9" r=".8" fill="currentColor"/><circle cx="14.7" cy="9" r=".8" fill="currentColor"/></svg>
-          </div>
-          <h3>Trattamento Viso</h3>
-          <p>Pulizia profonda, idratazione e trattamenti anti-age su misura per la tua pelle.</p>
-          <div class="service-foot"><span>da €45</span><button type="button" class="link-btn book-service">Prenota →</button></div>
-        </article>
-
-        <article class="service-card" data-service="Trattamento Corpo">
-          <div class="service-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 8v6M8 21l2.5-7M16 21l-2.5-7M8 12l4 2 4-2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <h3>Trattamento Corpo</h3>
-          <p>Percorsi rimodellanti, drenanti e nutrienti per un corpo tonico e luminoso.</p>
-          <div class="service-foot"><span>da €55</span><button type="button" class="link-btn book-service">Prenota →</button></div>
-        </article>
-
-        <article class="service-card" data-service="Massaggio Relax">
-          <div class="service-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M4 14c2-4 4-6 8-6s6 2 8 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 18c2-3 4-4 8-4s6 1 8 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".6"/></svg>
-          </div>
-          <h3>Massaggio Relax</h3>
-          <p>Massaggi rilassanti e decontratturanti per liberare la mente e sciogliere le tensioni.</p>
-          <div class="service-foot"><span>da €50</span><button type="button" class="link-btn book-service">Prenota →</button></div>
-        </article>
-
-        <article class="service-card" data-service="Epilazione">
-          <div class="service-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M5 19 19 5M9 5l10 10M5 15 15 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-          </div>
-          <h3>Epilazione</h3>
-          <p>Epilazione a cera e tecniche professionali per una pelle liscia più a lungo.</p>
-          <div class="service-foot"><span>da €15</span><button type="button" class="link-btn book-service">Prenota →</button></div>
-        </article>
-
-        <article class="service-card" data-service="Manicure &amp; Pedicure">
-          <div class="service-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M7 21V10a2 2 0 1 1 4 0v6M11 21v-9a2 2 0 1 1 4 0v7M15 21v-7a2 2 0 1 1 4 0v4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-          </div>
-          <h3>Manicure &amp; Pedicure</h3>
-          <p>Cura delle mani e dei piedi con smaltatura semipermanente e nail art.</p>
-          <div class="service-foot"><span>da €25</span><button type="button" class="link-btn book-service">Prenota →</button></div>
-        </article>
-
-        <article class="service-card" data-service="Make-up">
-          <div class="service-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M17 4 20 7 9 18l-4 1 1-4Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-          </div>
-          <h3>Make-up</h3>
-          <p>Trucco giorno, sera o sposa, studiato per valorizzare i tuoi lineamenti.</p>
-          <div class="service-foot"><span>da €35</span><button type="button" class="link-btn book-service">Prenota →</button></div>
-        </article>
-      </div>
+      <div class="menu-categories" id="menuCategories"></div>
     </div>
   </section>
 
   <!-- ================= PERCHE ================= -->
-  <section class="section">
+  <section class="section why-strip">
     <div class="section-inner reveal">
       <div class="why-grid">
         <div class="why-item">
-          <div class="why-icon" aria-hidden="true">✦</div>
+          <span class="why-num">01</span>
           <h4>Prodotti professionali</h4>
-          <p>Selezioniamo solo linee cosmetiche di alta qualità, testate e sicure.</p>
+          <p>Linee cosmetiche selezionate, testate e sicure.</p>
         </div>
         <div class="why-item">
-          <div class="why-icon" aria-hidden="true">✦</div>
-          <h4>Staff qualificato</h4>
-          <p>Estetiste formate e in costante aggiornamento sulle ultime tecniche.</p>
+          <span class="why-num">02</span>
+          <h4>Un cliente alla volta</h4>
+          <p>Nessuna sala d'attesa affollata: il tuo tempo è protetto.</p>
         </div>
         <div class="why-item">
-          <div class="why-icon" aria-hidden="true">✦</div>
-          <h4>Ambiente rilassante</h4>
-          <p>Un centro curato nei minimi dettagli, pensato per il tuo benessere.</p>
-        </div>
-        <div class="why-item">
-          <div class="why-icon" aria-hidden="true">✦</div>
+          <span class="why-num">03</span>
           <h4>Percorsi su misura</h4>
-          <p>Ogni trattamento parte da una consulenza dedicata alle tue esigenze.</p>
+          <p>Ogni trattamento parte da una consulenza dedicata.</p>
+        </div>
+        <div class="why-item">
+          <span class="why-num">04</span>
+          <h4>Prenotazione online</h4>
+          <p>Scegli data, orario e operatrice in pochi minuti.</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ================= STAFF ================= -->
+  <section class="section" id="staff">
+    <div class="section-inner reveal">
+      <p class="section-index">03 — Lo staff</p>
+      <h2>Chi si prende cura di te</h2>
+      <div class="staff-grid" id="staffGrid">
+        <!-- placeholder: sostituire con nomi/ruoli/foto reali -->
+        <div class="staff-card">
+          <div class="staff-avatar" aria-hidden="true">TT</div>
+          <h4>Titolare</h4>
+          <p class="muted small">Estetista specializzata · nome da confermare</p>
+        </div>
+        <div class="staff-card">
+          <div class="staff-avatar" aria-hidden="true">ES</div>
+          <h4>Estetista</h4>
+          <p class="muted small">Trattamenti viso e corpo · nome da confermare</p>
+        </div>
+      </div>
+      <p class="muted small staff-note">Foto e nomi reali in arrivo — questa sezione va aggiornata con lo staff vero.</p>
     </div>
   </section>
 
   <!-- ================= PRENOTA ================= -->
   <section class="section section-alt" id="prenota">
-    <div class="section-inner grid-2 reveal">
-      <div>
-        <p class="eyebrow">Prenota</p>
-        <h2>Prenota il tuo appuntamento online</h2>
-        <p class="section-lead">
-          Accedi o crea un account gratuito per prenotare i tuoi trattamenti e tenere
-          traccia delle tue prenotazioni in ogni momento.
-        </p>
+    <div class="section-inner reveal">
+      <p class="section-index">04 — Prenota</p>
+      <h2>Prenota il tuo appuntamento</h2>
+      <p class="section-lead">
+        Accedi o crea un account gratuito per prenotare e tenere traccia dei tuoi appuntamenti.
+      </p>
 
-        <div id="bookingLoggedOut" class="card soft-card">
-          <p>Devi accedere per prenotare un trattamento.</p>
-          <button type="button" class="btn btn-primary" id="promptLoginBtn">Accedi o Registrati</button>
-        </div>
-
-        <form id="bookingForm" class="card soft-card" hidden novalidate>
-          <div class="form-row">
-            <label for="bkService">Servizio</label>
-            <select id="bkService" name="service" required>
-              <option value="" disabled selected>Scegli un trattamento</option>
-              <option>Trattamento Viso</option>
-              <option>Trattamento Corpo</option>
-              <option>Massaggio Relax</option>
-              <option>Epilazione</option>
-              <option>Manicure &amp; Pedicure</option>
-              <option>Make-up</option>
-            </select>
+      <div class="grid-2 prenota-grid">
+        <div>
+          <div id="bookingLoggedOut" class="card soft-card">
+            <p>Devi accedere per prenotare un trattamento.</p>
+            <button type="button" class="btn btn-primary" id="promptLoginBtn">Accedi o Registrati</button>
+            <p class="muted small whatsapp-fallback">
+              Preferisci scrivere direttamente? <a href="https://wa.me/390000000000" target="_blank" rel="noopener">Prenota su WhatsApp →</a>
+            </p>
           </div>
-          <div class="form-row form-row-split">
-            <div>
+
+          <form id="bookingForm" class="card soft-card" hidden novalidate>
+            <div class="form-row">
+              <label for="bkService">Trattamento</label>
+              <select id="bkService" name="service" required></select>
+              <span class="hint" id="bkServiceInfo"></span>
+            </div>
+
+            <div class="form-row">
+              <label for="bkOperator">Operatrice (facoltativo)</label>
+              <select id="bkOperator" name="operator"></select>
+            </div>
+
+            <div class="form-row">
               <label for="bkDate">Data</label>
               <input type="date" id="bkDate" name="date" required />
             </div>
-            <div>
-              <label for="bkTime">Ora</label>
-              <input type="time" id="bkTime" name="time" required />
-            </div>
-          </div>
-          <div class="form-row">
-            <label for="bkNotes">Note (opzionale)</label>
-            <textarea id="bkNotes" name="notes" maxlength="500" rows="3" placeholder="Richieste particolari..."></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary" id="bookingSubmitBtn">Invia richiesta di prenotazione</button>
-          <p class="form-msg" id="bookingMsg" role="status" aria-live="polite"></p>
-        </form>
-      </div>
 
-      <div>
-        <div class="card soft-card bookings-panel">
-          <div class="bookings-panel-head">
-            <h3>Le tue prenotazioni</h3>
-            <span class="muted small" id="userEmailLabel"></span>
+            <div class="form-row">
+              <label>Orario</label>
+              <div class="slot-grid" id="bkSlots">
+                <p class="muted small" id="bkSlotsHint">Scegli prima un trattamento e una data.</p>
+              </div>
+              <input type="hidden" id="bkTime" name="time" required />
+            </div>
+
+            <div class="form-row">
+              <label for="bkNotes">Note (opzionale)</label>
+              <textarea id="bkNotes" name="notes" maxlength="500" rows="3" placeholder="Richieste particolari..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="bookingSubmitBtn">Invia richiesta di prenotazione</button>
+            <p class="form-msg" id="bookingMsg" role="status" aria-live="polite"></p>
+            <p class="muted small whatsapp-fallback">
+              Preferisci scrivere direttamente? <a href="https://wa.me/390000000000" target="_blank" rel="noopener">Prenota su WhatsApp →</a>
+            </p>
+          </form>
+        </div>
+
+        <div>
+          <div class="card soft-card bookings-panel">
+            <div class="bookings-panel-head">
+              <h3>Le tue prenotazioni</h3>
+              <span class="muted small" id="userEmailLabel"></span>
+            </div>
+            <ul id="bookingsList" class="bookings-list">
+              <li class="muted small" id="bookingsEmpty">Accedi per vedere le tue prenotazioni.</li>
+            </ul>
           </div>
-          <ul id="bookingsList" class="bookings-list">
-            <li class="muted small" id="bookingsEmpty">Accedi per vedere le tue prenotazioni.</li>
-          </ul>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ================= TESTIMONIANZE ================= -->
+  <!-- ================= RECENSIONI ================= -->
   <section class="section">
     <div class="section-inner reveal">
-      <p class="eyebrow center">Testimonianze</p>
-      <h2 class="center">Le nostre clienti raccontano</h2>
-      <div class="testimonials">
-        <blockquote>
-          <p>"Un'atmosfera accogliente e uno staff davvero competente. Il trattamento viso è
-          stato rigenerante, mi sono sentita rinata."</p>
-          <cite>— Giulia R.</cite>
-        </blockquote>
-        <blockquote>
-          <p>"Prenotare online è comodissimo e il risultato del massaggio relax ha superato
-          le aspettative. Consigliatissimo."</p>
-          <cite>— Martina F.</cite>
-        </blockquote>
-        <blockquote>
-          <p>"Professionalità e attenzione ai dettagli. La Crisalide è diventato il mio
-          appuntamento fisso ogni mese."</p>
-          <cite>— Elena M.</cite>
-        </blockquote>
+      <p class="section-index center">05 — Recensioni</p>
+      <h2 class="center">Cosa dicono di noi</h2>
+      <div class="reviews-cta">
+        <p>
+          Le recensioni vere delle nostre clienti arriveranno qui a breve — non pubblichiamo
+          testimonianze inventate. Nel frattempo trovi le recensioni verificate sulla nostra
+          scheda Google.
+        </p>
+        <a href="#" target="_blank" rel="noopener" class="btn btn-outline" id="googleReviewsLink">
+          Vedi le recensioni su Google ↗
+        </a>
       </div>
     </div>
   </section>
@@ -307,23 +267,26 @@
   <section class="section section-alt" id="contatti">
     <div class="section-inner grid-2 reveal">
       <div>
-        <p class="eyebrow">Contatti</p>
+        <p class="section-index">06 — Contatti</p>
         <h2>Vieni a trovarci</h2>
         <ul class="contact-list">
           <li><strong>Indirizzo</strong><span>Via Roma 1, 00100 Città (IT)</span></li>
           <li><strong>Telefono</strong><span><a href="tel:+390000000000">+39 000 000 0000</a></span></li>
           <li><strong>Email</strong><span><a href="mailto:info@lacrisalide.it">info@lacrisalide.it</a></span></li>
-          <li><strong>Orari</strong><span>Lun–Sab 9:00–19:00</span></li>
+          <li><strong>Orari</strong><span>Lun–Ven 9:00–19:00 · Sab 9:00–18:00</span></li>
         </ul>
+        <a class="btn btn-primary whatsapp-btn" href="https://wa.me/390000000000" target="_blank" rel="noopener">
+          Scrivici su WhatsApp
+        </a>
         <div class="socials" aria-label="Social">
           <a href="#" aria-label="Instagram">IG</a>
           <a href="#" aria-label="Facebook">FB</a>
-          <a href="#" aria-label="WhatsApp">WA</a>
         </div>
       </div>
       <div class="map-placeholder" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="40" height="40"><path d="M12 22s7-7.2 7-12a7 7 0 1 0-14 0c0 4.8 7 12 7 12Z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        <svg viewBox="0 0 24 24" width="36" height="36"><path d="M12 22s7-7.2 7-12a7 7 0 1 0-14 0c0 4.8 7 12 7 12Z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
         <span>Via Roma 1, 00100 Città</span>
+        <a href="#" target="_blank" rel="noopener" class="link-btn">Apri in Google Maps →</a>
       </div>
     </div>
   </section>
@@ -333,7 +296,7 @@
     <div class="footer-inner">
       <div class="brand">
         <span class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 48 48" width="24" height="24"><path d="M24 8c0 0-1 6-8 8-6 1.8-10 7-8 13 1.6 5 7 6 10 3 2-2 3-5 3-8v16M24 8c0 0 1 6 8 8 6 1.8 10 7 8 13-1.6 5-7 6-10 3-2-2-3-5-3-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg viewBox="0 0 32 32" width="20" height="20"><path d="M16 6c0 8-6 9-6 15a6 6 0 0 0 6-6c0 3.3 2.7 6 6 6 0-6-6-7-6-15Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
         </span>
         <span class="brand-title">La Crisalide</span>
       </div>
