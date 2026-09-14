@@ -88,12 +88,12 @@ service cloud.firestore {
         request.resource.data.createdAt is timestamp;
     }
 
-    function isValidService(service) {
+    function isValidService(svc) {
       let allowed = [
         'Trattamento Viso', 'Trattamento Corpo', 'Massaggio Relax',
         'Epilazione', 'Manicure & Pedicure', 'Make-up'
       ];
-      return service is string && service in allowed;
+      return svc is string && svc in allowed;
     }
 
     function isValidDateString(dateStr) {
@@ -111,7 +111,7 @@ service cloud.firestore {
       return hasOnlyAllowedFields(['uid', 'service', 'date', 'time', 'notes', 'status', 'createdAt']) &&
         hasRequiredFields(['uid', 'service', 'date', 'time', 'status', 'createdAt']) &&
         data.uid is string && data.uid == request.auth.uid &&
-        isValidService(data.service) &&
+        isValidService(data['service']) &&
         isValidDateString(data.date) &&
         isValidTimeString(data.time) &&
         isValidOptionalString('notes', 500) &&
