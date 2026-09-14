@@ -1,0 +1,54 @@
+{
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "cleanUrls": true,
+    "trailingSlash": false,
+    "headers": [
+      {
+        "source": "**",
+        "headers": [
+          { "key": "X-Frame-Options", "value": "DENY" },
+          { "key": "X-Content-Type-Options", "value": "nosniff" },
+          { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+        ]
+      },
+      {
+        "source": "**/*.@(js|css)",
+        "headers": [
+          { "key": "Cache-Control", "value": "max-age=31536000, immutable" }
+        ]
+      },
+      {
+        "source": "**/*.@(jpg|jpeg|png|svg|webp|avif|ico)",
+        "headers": [
+          { "key": "Cache-Control", "value": "max-age=31536000, immutable" }
+        ]
+      },
+      {
+        "source": "/index.html",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-cache" }
+        ]
+      }
+    ]
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "auth": {
+    "authorizedDomains": [
+      "localhost",
+      "estetica-lacrisalide.web.app",
+      "estetica-lacrisalide.firebaseapp.com"
+    ],
+    "providers": {
+      "emailPassword": true
+    }
+  }
+}

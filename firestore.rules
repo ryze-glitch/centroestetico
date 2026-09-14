@@ -1,0 +1,157 @@
+rules_version = '2';
+
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// Collection: users
+// Document ID: {uid} (matches the Firebase Auth uid of the owner)
+// Fields:
+//   - displayName: string (required, 1-60 chars) - client's name
+//   - email: string (required, must match request.auth.token.email, immutable)
+//   - phone: string (optional, 5-20 chars)
+//   - createdAt: timestamp (required, immutable, set on create)
+//
+// Collection: bookings
+// Document ID: {bookingId} (auto-generated)
+// Fields:
+//   - uid: string (required, immutable, must equal request.auth.uid) - owner
+//   - service: string (required, must be one of the allowed services)
+//   - date: string (required, format YYYY-MM-DD, immutable after create)
+//   - time: string (required, format HH:MM, immutable after create)
+//   - notes: string (optional, max 500 chars, immutable after create)
+//   - status: string (required, one of 'richiesta' | 'confermata' | 'annullata')
+//       * created as 'richiesta'
+//       * owner may only transition 'richiesta' -> 'annullata' (self-cancel)
+//   - createdAt: timestamp (required, immutable, must be recent at create time)
+//
+// No collection is publicly readable. Every document is scoped to its
+// owner (request.auth.uid) only - this app has no admin/staff role yet.
+// ===============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    function validStringLength(field, minLen, maxLen) {
+      return request.resource.data[field] is string &&
+        request.resource.data[field].size() >= minLen &&
+        request.resource.data[field].size() <= maxLen;
+    }
+
+    function isValidOptionalString(field, maxLen) {
+      return !(field in request.resource.data) ||
+        (request.resource.data[field] is string &&
+         request.resource.data[field].size() <= maxLen);
+    }
+
+    function isRecent(time) {
+      return time is timestamp &&
+        time > request.time - duration.value(5, 'm') &&
+        time <= request.time;
+    }
+
+    function fieldUnchanged(field) {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny([field]);
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    function isValidUserProfile() {
+      return hasOnlyAllowedFields(['displayName', 'email', 'phone', 'createdAt']) &&
+        hasRequiredFields(['displayName', 'email', 'createdAt']) &&
+        validStringLength('displayName', 1, 60) &&
+        request.resource.data.email is string &&
+        request.resource.data.email == request.auth.token.email &&
+        isValidOptionalString('phone', 20) &&
+        request.resource.data.createdAt is timestamp;
+    }
+
+    function isValidService(service) {
+      let allowed = [
+        'Trattamento Viso', 'Trattamento Corpo', 'Massaggio Relax',
+        'Epilazione', 'Manicure & Pedicure', 'Make-up'
+      ];
+      return service is string && service in allowed;
+    }
+
+    function isValidDateString(dateStr) {
+      return dateStr is string &&
+        dateStr.matches('^\\d{4}-\\d{2}-\\d{2}$');
+    }
+
+    function isValidTimeString(timeStr) {
+      return timeStr is string &&
+        timeStr.matches('^([01]\\d|2[0-3]):[0-5]\\d$');
+    }
+
+    function isValidNewBooking() {
+      let data = request.resource.data;
+      return hasOnlyAllowedFields(['uid', 'service', 'date', 'time', 'notes', 'status', 'createdAt']) &&
+        hasRequiredFields(['uid', 'service', 'date', 'time', 'status', 'createdAt']) &&
+        data.uid is string && data.uid == request.auth.uid &&
+        isValidService(data.service) &&
+        isValidDateString(data.date) &&
+        isValidTimeString(data.time) &&
+        isValidOptionalString('notes', 500) &&
+        data.status == 'richiesta' &&
+        isRecent(data.createdAt);
+    }
+
+    function isValidBookingCancellation() {
+      // Owner may ONLY flip status from 'richiesta' to 'annullata'.
+      // Every other field (including status' own identity outside that
+      // one transition) must remain byte-for-byte identical.
+      let onlyStatusChanged = request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']);
+      return onlyStatusChanged &&
+        resource.data.status == 'richiesta' &&
+        request.resource.data.status == 'annullata';
+    }
+
+    // ===============================================================
+    // Collections
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidUserProfile();
+      allow update: if isOwner(userId) && isValidUserProfile() &&
+        fieldUnchanged('email') && fieldUnchanged('createdAt');
+      allow delete: if false;
+    }
+
+    match /bookings/{bookingId} {
+      allow read: if isAuthenticated() && resource.data.uid == request.auth.uid;
+      allow create: if isAuthenticated() && isValidNewBooking();
+      allow update: if isAuthenticated() && resource.data.uid == request.auth.uid &&
+        isValidBookingCancellation();
+      allow delete: if false;
+    }
+
+    // Default deny: no other path is accessible.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
