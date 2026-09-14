@@ -33,10 +33,32 @@ live sul progetto `estetica-lacrisalide`).
 Dopo ogni modifica al codice va rifatto il deploy. Da questo ambiente
 sandbox **non è possibile farlo direttamente**: la rete blocca
 `auth.firebase.tools` e `console.firebase.google.com`, quindi il login
-interattivo della Firebase CLI non può completarsi qui. In pratica, per
-pubblicare un aggiornamento serve una di queste due strade:
+interattivo della Firebase CLI non può completarsi qui.
 
-**A. Lo fai tu in locale**
+### Deploy automatico (consigliato — un solo passaggio da fare, una volta sola)
+
+C'è un workflow GitHub Actions già pronto
+(`.github/workflows/firebase-deploy.yml`) che pubblica in automatico
+Hosting + regole/indici Firestore a ogni push su `main` (o manualmente
+dal tab "Actions" del repo su GitHub, pulsante "Run workflow" — funziona
+anche da telefono, senza terminale). Gli serve un solo segreto,
+`FIREBASE_TOKEN`, da configurare **una volta sola**:
+
+1. Da un terminale qualsiasi (PC, o Google Cloud Shell su
+   https://shell.cloud.google.com se non hai un PC a portata di mano),
+   genera un token:
+   ```bash
+   npx -y firebase-tools@latest login:ci --no-localhost
+   ```
+   Segui il link, autorizza, copia il token stampato alla fine.
+2. Vai su GitHub → repo `centroestetico` → **Settings → Secrets and
+   variables → Actions → New repository secret**. Nome: `FIREBASE_TOKEN`,
+   valore: il token copiato. Salva.
+
+Da quel momento ogni push su `main` pubblica da solo — nessun altro
+passaggio manuale, né da terminale né da telefono.
+
+### Deploy manuale (alternativa)
 
 ```bash
 npx -y firebase-tools@latest login
@@ -45,14 +67,8 @@ npx -y firebase-tools@latest deploy \
   --project estetica-lacrisalide
 ```
 
-**B. Generi un token e me lo passi tu**
-
-```bash
-npx -y firebase-tools@latest login:ci --no-localhost
-```
-
-Segui il link, autorizza, copia il token e incollalo in chat: lo uso
-una tantum per fare il deploy da qui, poi va revocato da
+Oppure genera un token come sopra e incollamelo in chat: lo uso una
+tantum per fare il deploy da qui, poi va revocato da
 https://myaccount.google.com/permissions (cerca "Firebase CLI").
 
 Se in futuro cambi trattamenti/prezzi in `public/js/services-data.js`,

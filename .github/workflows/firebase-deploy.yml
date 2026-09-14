@@ -1,0 +1,22 @@
+name: Deploy to Firebase
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy Hosting + Firestore rules/indexes
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          npx -y firebase-tools@latest deploy \
+            --only hosting,firestore:rules,firestore:indexes \
+            --project estetica-lacrisalide \
+            --token "$FIREBASE_TOKEN" \
+            --non-interactive
