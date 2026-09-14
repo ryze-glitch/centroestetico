@@ -10,7 +10,7 @@ public/               ← cartella pubblicata su Firebase Hosting
   index.html
   css/style.css
   js/
-    firebase-config.js  ← QUI vanno inserite le credenziali del progetto
+    firebase-config.js  ← credenziali dell'app web (già compilate)
     firebase-init.js
     auth.js              ← login / registrazione / logout
     booking.js            ← prenotazioni (Firestore)
@@ -28,10 +28,10 @@ firestore.indexes.json  ← indici composti
 Questo ambiente di sviluppo remoto **non ha accesso di rete** a
 `auth.firebase.tools` / `console.firebase.google.com` (bloccati dal
 proxy di rete), quindi non è stato possibile eseguire da qui il login
-interattivo della Firebase CLI, registrare l'app web ed abilitare il
-provider Email/Password direttamente sul progetto. Il codice è pronto:
-mancano solo questi passaggi, da eseguire in locale (o dalla Console
-Firebase) con il tuo account:
+interattivo della Firebase CLI né il deploy. Il codice è pronto e già
+configurato con l'app web che hai registrato tu (`La Crisalide Web`,
+`public/js/firebase-config.js` già compilato). Restano da fare, in
+locale (o dalla Console Firebase) con il tuo account:
 
 ### 1. Login e selezione progetto
 
@@ -40,25 +40,7 @@ npx -y firebase-tools@latest login
 npx -y firebase-tools@latest use estetica-lacrisalide
 ```
 
-### 2. Registra l'app Web nel progetto
-
-```bash
-npx -y firebase-tools@latest apps:create web "La Crisalide Web" \
-  --project estetica-lacrisalide
-```
-
-Prendi nota dell'**App ID** restituito, poi scarica la configurazione:
-
-```bash
-npx -y firebase-tools@latest apps:sdkconfig WEB <APP_ID> \
-  --project estetica-lacrisalide
-```
-
-Copia i valori (`apiKey`, `authDomain`, `projectId`, `storageBucket`,
-`messagingSenderId`, `appId`) dentro **`public/js/firebase-config.js`**,
-sostituendo i placeholder.
-
-### 3. Abilita l'autenticazione Email/Password
+### 2. Abilita l'autenticazione Email/Password
 
 **Opzione CLI** — il blocco `auth` è già presente in `firebase.json`,
 basta effettuare il deploy:
@@ -71,7 +53,7 @@ npx -y firebase-tools@latest deploy --only auth --project estetica-lacrisalide
 method](https://console.firebase.google.com/project/estetica-lacrisalide/authentication/providers)
 → abilita **Email/Password**.
 
-### 4. Crea il database Firestore (se non esiste già)
+### 3. Crea il database Firestore (se non esiste già)
 
 ```bash
 npx -y firebase-tools@latest firestore:databases:list --project estetica-lacrisalide
@@ -85,7 +67,7 @@ npx -y firebase-tools@latest firestore:databases:create "(default)" \
   --location=eur3 --project estetica-lacrisalide
 ```
 
-### 5. Deploy delle regole Firestore e dell'Hosting
+### 4. Deploy delle regole Firestore e dell'Hosting
 
 ```bash
 npx -y firebase-tools@latest deploy \
